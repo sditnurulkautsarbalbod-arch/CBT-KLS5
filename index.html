@@ -282,12 +282,12 @@
         // FIREBASE CONFIGURATION (Only for non-question data)
         // =================================================================
         const firebaseConfig = {
-            apiKey: "AIzaSyDECT4fzIYhUYuSb3k07knPCsSupjn3nPg",
-            authDomain: "cbt-2-nk.firebaseapp.com",
-            projectId: "cbt-2-nk",
-            storageBucket: "cbt-2-nk.firebasestorage.app",
-            messagingSenderId: "794230557729",
-            appId: "1:794230557729:web:d79994a6596bef7bd3a760"
+            apiKey: "AIzaSyAodwWuwFVYTV4bX5tE7OorHsNKUd43dK8",
+            authDomain: "cbt-kls-5.firebaseapp.com",
+            projectId: "cbt-kls-5",
+            storageBucket: "cbt-kls-5.firebasestorage.app",
+            messagingSenderId: "985525719163",
+            appId: "1:985525719163:web:7a274de4ecf5f8e6ac52de"
         };
 
         // Initialize Firebase
@@ -363,7 +363,7 @@
         // =================================================================
         // GOOGLE SCRIPT HELPER
         // =================================================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwry-ZzRFesek7y1j8wj3RAADNGRBa4ff-0xOjNkYoUz46oNsxtyCwrclwsY0qsHQz9/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4MwkMrFSo6mVi_YXcG1L16t_3KnkRNC2WkT30x7QwGgMnMJbOIJoBY7NguqgO9rDk/exec';
 
         async function callGoogleScript(method = 'GET', params = {}) {
             const url = new URL(SCRIPT_URL);
@@ -2209,7 +2209,7 @@
         // =================================================================
         const GeminiHelper = {
             async generateQuestions(promptData) {
-                const apiKey = "AIzaSyCeRHVlDH043X7BLrwdCwotwvmQddJFil0"; // API key is handled by the environment
+                const apiKey = "AIzaSyBJkdqKu3MWZauX5QUoxAb_EancxGFOZio"; // API key is handled by the environment
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                 const systemPrompt = `Anda adalah asisten pembuatan soal untuk guru SD. Buat soal berdasarkan topik, mata pelajaran, dan kelas yang diberikan. Pastikan jawaban pilihan ganda bervariasi dan pengecohnya masuk akal. Jangan membuat soal yang terlalu sulit untuk level SD. Selalu berikan respon dalam format JSON yang valid sesuai skema yang diminta, dan sertakan tipe soal ('pilihan_ganda', 'isian', 'uraian') untuk setiap soal.`;
