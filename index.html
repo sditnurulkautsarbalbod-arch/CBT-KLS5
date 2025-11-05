@@ -71,7 +71,7 @@
                 <div class="bg-blue-600 text-white py-4 px-6 rounded-xl mb-6">
                     <h1 class="text-2xl font-bold">SD IT NURUL KAUTSAR</h1>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">UJIAN ONLINE KELAS 5</h2>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">UJIAN ONLINE KELAS 6</h2>
             </div>
             
             <!-- Login Form -->
@@ -283,11 +283,11 @@
         // =================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyAodwWuwFVYTV4bX5tE7OorHsNKUd43dK8",
-            authDomain: "cbt-kls-5.firebaseapp.com",
-            projectId: "cbt-kls-5",
-            storageBucket: "cbt-kls-5.firebasestorage.app",
-            messagingSenderId: "985525719163",
-            appId: "1:985525719163:web:7a274de4ecf5f8e6ac52de"
+			authDomain: "cbt-kls-5.firebaseapp.com",
+			projectId: "cbt-kls-5",
+			storageBucket: "cbt-kls-5.firebasestorage.app",
+			messagingSenderId: "985525719163",
+			appId: "1:985525719163:web:7a274de4ecf5f8e6ac52de"
         };
 
         // Initialize Firebase
@@ -363,7 +363,7 @@
         // =================================================================
         // GOOGLE SCRIPT HELPER
         // =================================================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4MwkMrFSo6mVi_YXcG1L16t_3KnkRNC2WkT30x7QwGgMnMJbOIJoBY7NguqgO9rDk/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0STxAOQukax3ujd027AiYdDKbER3PAIky68wH23lxAz1A8WbUfnGPe8pdVdugwtA8/exec';
 
         async function callGoogleScript(method = 'GET', params = {}) {
             const url = new URL(SCRIPT_URL);
@@ -3585,17 +3585,33 @@
                         status: status,
                         nilai: point,
                         mataPelajaran: examDetails.mataPelajaran,
-                        semester: examDetails.semester,
-                        tahunAjaran: examDetails.tahunAjaran,
+                        semester: examDetails.semester || AppState.lastQuestionData.semester || 'Tidak diketahui',
+                        tahunAjaran: examDetails.tahunAjaran || AppState.lastQuestionData.tahunAjaran || 'Tidak diketahui',
                         timestamp: submissionTimestamp
                     });
                 }
                 
                 try {
+                    // This is where the fix for date-like answers is implemented.
+                    const preparedResults = resultsForSheet.map((result, index) => {
+                        const question = AppState.questions[index];
+                        // Hanya berlaku untuk soal isian atau uraian
+                        if (question && (question.type === 'isian' || question.type === 'uraian')) {
+                            const answer = String(result.jawabanSiswa);
+                            
+                            // Regex untuk mendeteksi format seperti tanggal (misal: 1/2, 1-2, 1/2/2024) atau angka murni
+                            if (/^\d{1,4}[-\/]\d{1,2}(?:[-\/]\d{1,4})?$/.test(answer.trim()) || /^\d+$/.test(answer.trim())) {
+                                // Jika cocok, tambahkan tanda kutip di depannya
+                                return { ...result, jawabanSiswa: "'" + answer };
+                            }
+                        }
+                        return result;
+                    });
+                    
                     // Send all results to Google Sheet in one go
                     await callGoogleScript('POST', {
                         action: 'addResults',
-                        data: resultsForSheet
+                        data: preparedResults
                     });
 
                     // Save final grade summary to Firebase
